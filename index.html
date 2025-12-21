@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Private Gallery</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- prevents favicon 404 noise -->
+  <link rel="icon" href="data:,">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Private Gallery</h1>
+      <p class="sub">For invited viewers only.</p>
+    </header>
+
+    <section id="gate" class="card">
+      <h2>Enter access code</h2>
+      <input id="code" type="password" placeholder="Access code" autocomplete="off" />
+      <button id="unlock">Unlock</button>
+      <p id="msg" class="msg"></p>
+    </section>
+
+    <section id="app" class="hidden">
+      <div class="toolbar">
+        <button id="lock">Lock</button>
+        <span class="tiny">Screenshots can’t be fully prevented on the web.</span>
+      </div>
+
+      <div id="grid" class="grid"></div>
+
+      <footer class="footer">
+        <p class="tiny">
+          Access is personal and non-transferable. Do not download, repost, or share.
+        </p>
+      </footer>
+    </section>
+  </div>
+
+  <script src="gallery.js"></script>
+</body>
+</html>
