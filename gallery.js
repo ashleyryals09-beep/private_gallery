@@ -4,25 +4,17 @@
   const photoCount = document.getElementById("photoCount");
   const videoCount = document.getElementById("videoCount");
 
-  const modal = document.getElementById("modal");
-  const modalTitle = document.getElementById("modalTitle");
-  const modalContent = document.getElementById("modalContent");
-  const closeBtn = document.getElementById("closeBtn");
-
-  function joinPath(dir, file) {
-    return `${dir.replace(/\/$/, "")}/${file}`;
+  // If your HTML doesn't have these IDs, nothing will render.
+  if (!photoGrid || !videoGrid) {
+    console.error("Missing #photoGrid or #videoGrid in index.html");
+    return;
   }
 
+  // Basic card builder
   function makeCard({ type, src, title }) {
     const card = document.createElement("div");
     card.className = "card";
-    card.dataset.type = type;
-    card.dataset.src = src;
-    card.dataset.title = title;
 
-    // Thumbnail:
-    // - For photos: use the photo itself (simple)
-    // - For videos: show a generic "play" poster box (no auto thumbnail extraction)
     const thumb = document.createElement("div");
     thumb.className = "thumb";
 
@@ -50,7 +42,15 @@
     return card;
   }
 
+  // Modal (optional; if you don’t have it in HTML, it will still show grids)
+  const modal = document.getElementById("modal");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalContent = document.getElementById("modalContent");
+  const closeBtn = document.getElementById("closeBtn");
+
   function openModal(type, src, title) {
+    if (!modal || !modalTitle || !modalContent) return;
+
     modalTitle.textContent = title || "Preview";
     modalContent.innerHTML = "";
 
@@ -70,78 +70,101 @@
     }
 
     modal.classList.add("open");
-    modal.setAttribute("aria-hidden", "false");
   }
 
   function closeModal() {
+    if (!modal || !modalContent) return;
     modal.classList.remove("open");
-    modal.setAttribute("aria-hidden", "true");
     modalContent.innerHTML = "";
   }
 
-  closeBtn.addEventListener("click", closeModal);
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeModal();
-  });
+  if (closeBtn) closeBtn.addEventListener("click", closeModal);
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeModal();
   });
+  if (modal) {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) closeModal();
+    });
+  }
 
-  // Load manifest
-  let manifest;
+  // ---- Load JSON ----
+  async function fetchJson(path) {
+    const res = await fetch(path, { cache: "no-store" });
+    if (!res.ok) throw new Error(`${path} HTTP ${res.status}`);
+    return res.json();
+  }
+
+  let data;
   try {
-    const res = await fetch("photos.json", { cache: "no-store" });
-    if (!res.ok) throw new Error(`Failed to load photos.json (${res.status})`);
-    manifest = await res.json();
-  } catch (err) {
-    console.error(err);
+    data = await fetchJson("photos.json");
+  } catch (e) {
+    console.error("Failed to load photos.json:", e);
     photoGrid.innerHTML = `<div class="error">Could not load photos.json</div>`;
     return;
   }
 
-  const photoDir = manifest.photoDir || "photo/folder";
-  const videoDir = manifest.videoDir || "videos/folder";
+  // Support BOTH formats:
+  // 1) Array: ["photo/photo1.jpeg", ...]
+  // 2) Manifest: { photos: [...], videos: [...] }
+  let photos = [];
+  let videos = [];
 
-  const photos = Array.isArray(manifest.photos) ? manifest.photos : [];
-  const videos = Array.isArray(manifest.videos) ? manifest.videos : [];
+  if (Array.isArray(data)) {
+    photos = data;
+  } else {
+    photos = Array.isArray(data.photos) ? data.photos : [];
+    videos = Array.isArray(data.videos) ? data.videos : [];
+  }
 
-  // Optional: de-dupe by "basename" (photo300.jpg vs photo300.jpeg)
-  // Prefers .jpeg over .jpg over .JPG etc.
-  function dedupeByBasename(files) {
-    const pref = ["jpeg", "jpg", "png", "webp", "gif"];
-    const map = new Map();
-    for (const f of files) {
-      const parts = f.split(".");
-      if (parts.length < 2) continue;
-      const ext = parts.pop();
-      const base = parts.join(".");
-      const extLower = ext.toLowerCase();
-      const rank = pref.indexOf(extLower);
-      const current = map.get(base);
-      if (!current) {
-        map.set(base, { file: f, rank: rank === -1 ? 999 : rank });
-      } else {
-        const newRank = rank === -1 ? 999 : rank;
-        if (newRank < current.rank) {
-          map.set(base, { file: f, rank: newRank });
-        }
-      }
+  // If you keep videos separate, try loading videos.json too (optional)
+  if (videos.length === 0) {
+    try {
+      const v = await fetchJson("videos.json");
+      if (Array.isArray(v)) videos = v;
+    } catch (_) {
+      // ok if videos.json doesn't exist yet
     }
-    return [...map.values()].map(x => x.file);
   }
 
-  const finalPhotos = dedupeByBasename(photos);
+  // ---- Auto-fix your folder paths ----
+  // Your repo has: photo/folder/* and videos/folder/*
+  // Your JSON currently has: photo/photo1.jpeg etc.
+  function fixPath(p) {
+    // normalize slashes and trim
+    p = String(p || "").trim();
+    if (!p) return p;
 
-  // Render
-  photoCount.textContent = `${finalPhotos.length}`;
-  videoCount.textContent = `${videos.length}`;
+    // photo paths
+    if (p.startsWith("photo/") && !p.startsWith("photo/folder/")) {
+      p = p.replace(/^photo\//, "photo/folder/");
+    }
 
-  for (const f of finalPhotos) {
-    const src = joinPath(photoDir, f);
-    photoGrid.appendChild(makeCard({ type: "image", src, title: f }));
+    // video paths
+    if (p.startsWith("videos/") && !p.startsWith("videos/folder/")) {
+      p = p.replace(/^videos\//, "videos/folder/");
+    }
+
+    return p;
   }
 
-  for (const f of videos) {
-    const src = joinPath(videoDir, f);
-    videoGrid.appendChild(makeCard({ type: "video", src, title: f }));
+  photos = photos.map(fixPath);
+  videos = videos.map(fixPath);
+
+  // ---- Render ----
+  photoGrid.innerHTML = "";
+  videoGrid.innerHTML = "";
+
+  if (photoCount) photoCount.textContent = `${photos.length}`;
+  if (videoCount) videoCount.textContent = `${videos.length}`;
+
+  for (const p of photos) {
+    const title = p.split("/").pop();
+    photoGrid.appendChild(makeCard({ type: "image", src: p, title }));
   }
+
+  for (const v of videos) {
+    const title = v.split("/").pop();
+    videoGrid.appendChild(makeCard({ type: "video", src: v, title }));
+  }
+})();
