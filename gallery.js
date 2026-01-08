@@ -145,4 +145,3 @@
     const src = joinPath(videoDir, f);
     videoGrid.appendChild(makeCard({ type: "video", src, title: f }));
   }
-})();
