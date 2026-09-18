@@ -1,41 +1,45 @@
 (() => {
 
-  /* ==========================================
-     ASHLEY DANIELLE GALLERY
-     No JSON files required
-     ========================================== */
+  /* =========================================
+     ASHLEY DANIELLE PORTFOLIO
+     =========================================
 
-  const photoGrid = document.getElementById("photoGrid");
-  const videoGrid = document.getElementById("videoGrid");
+     IMPORTANT:
 
-  const photoCount = document.getElementById("photoCount");
-  const videoCount = document.getElementById("videoCount");
+     This website does NOT use photos.json
+     or videos.json.
 
-  const modal = document.getElementById("modal");
-  const modalTitle = document.getElementById("modalTitle");
-  const modalContent = document.getElementById("modalContent");
-  const closeBtn = document.getElementById("closeBtn");
+     To change what appears in Recently Added
+     or Special Edition, edit the lists below.
+     ========================================= */
 
 
-  /* ==========================================
-     YOUR PHOTO FILENAMES
-     ========================================== */
+  /* =========================================
+     HERO IMAGE
+     ========================================= */
 
-  const photoFiles = [
+  const HERO_PHOTO = "photo1.jpeg";
 
-    // photo1.jpeg through photo27.jpeg
+
+  /* =========================================
+     ALL PHOTO FILES
+
+     Current files based on your collection.
+     photo28.jpeg was NOT in your original list.
+     ========================================= */
+
+  const allPhotos = [
+
     ...Array.from(
       { length: 27 },
       (_, i) => `photo${i + 1}.jpeg`
     ),
 
-    // photo29.jpeg through photo38.jpeg
     ...Array.from(
       { length: 10 },
       (_, i) => `photo${i + 29}.jpeg`
     ),
 
-    // photo300.jpeg through photo317.jpeg
     ...Array.from(
       { length: 18 },
       (_, i) => `photo${i + 300}.jpeg`
@@ -44,223 +48,306 @@
   ];
 
 
-  /* ==========================================
-     YOUR VIDEO FILENAMES
-     ========================================== */
 
-  const videoFiles = Array.from(
+  /* =========================================
+     ALL VIDEO FILES
+     ========================================= */
+
+  const allVideos = Array.from(
     { length: 13 },
     (_, i) => `video${i + 1}.mp4`
   );
 
 
-  /* ==========================================
+
+  /* =========================================
+     RECENTLY ADDED
+
+     Put the newest content here.
+
+     type can be:
+     "image"
+     or
+     "video"
+     ========================================= */
+
+  const recentlyAdded = [
+
+    {
+      type: "image",
+      file: "photo317.jpeg"
+    },
+
+    {
+      type: "image",
+      file: "photo316.jpeg"
+    },
+
+    {
+      type: "video",
+      file: "video13.mp4"
+    },
+
+    {
+      type: "image",
+      file: "photo315.jpeg"
+    }
+
+  ];
+
+
+
+  /* =========================================
+     SPECIAL / EXCLUSIVE
+
+     These will NOT also appear in the
+     normal photo/video gallery.
+     ========================================= */
+
+  const specialContent = [
+
+    {
+      type: "image",
+      file: "photo310.jpeg"
+    },
+
+    {
+      type: "video",
+      file: "video12.mp4"
+    },
+
+    {
+      type: "image",
+      file: "photo311.jpeg"
+    },
+
+    {
+      type: "video",
+      file: "video11.mp4"
+    }
+
+  ];
+
+
+
+  /* =========================================
      POSSIBLE FOLDER LOCATIONS
 
-     Your old JSON says:
+     Your old JSON showed:
      photo/folder/photo1.jpeg
 
-     This script ALSO tries:
+     But this also supports:
      photo/photo1.jpeg
 
-     So either structure can work.
-     ========================================== */
+     Videos support:
+     videos/folder/video1.mp4
+     videos/video1.mp4
+     ========================================= */
 
   const PHOTO_PATHS = [
+
     "photo/folder/",
+
     "photo/"
+
   ];
+
 
   const VIDEO_PATHS = [
+
     "videos/folder/",
+
     "videos/",
+
     ""
+
   ];
 
 
-  /* ==========================================
-     PHOTO CARDS
-     ========================================== */
 
-  function createPhotoCard(filename) {
+  /* =========================================
+     DOM ELEMENTS
+     ========================================= */
 
-    const card = document.createElement("div");
-    card.className = "card";
-
-    const thumb = document.createElement("div");
-    thumb.className = "thumb";
-
-    const img = document.createElement("img");
-
-    img.alt = "";
-    img.loading = "lazy";
-
-    let pathIndex = 0;
+  const heroImage =
+    document.getElementById("heroImage");
 
 
-    // Try first folder location
-    img.src = PHOTO_PATHS[pathIndex] + filename;
+  const recentGrid =
+    document.getElementById("recentGrid");
 
 
-    // If image isn't there, automatically
-    // try the next possible folder
-    img.onerror = function () {
+  const specialGrid =
+    document.getElementById("specialGrid");
 
-      pathIndex++;
 
-      if (pathIndex < PHOTO_PATHS.length) {
+  const photoGrid =
+    document.getElementById("photoGrid");
 
-        img.src =
-          PHOTO_PATHS[pathIndex] +
-          filename;
 
-      } else {
+  const videoGrid =
+    document.getElementById("videoGrid");
+
+
+  const recentCount =
+    document.getElementById("recentCount");
+
+
+  const specialCount =
+    document.getElementById("specialCount");
+
+
+  const photoCount =
+    document.getElementById("photoCount");
+
+
+  const videoCount =
+    document.getElementById("videoCount");
+
+
+  const modal =
+    document.getElementById("modal");
+
+
+  const modalTitle =
+    document.getElementById("modalTitle");
+
+
+  const modalContent =
+    document.getElementById("modalContent");
+
+
+  const closeBtn =
+    document.getElementById("closeBtn");
+
+
+
+  /* =========================================
+     IMAGE FALLBACK LOADER
+
+     Automatically tries both:
+
+     photo/folder/
+     photo/
+     ========================================= */
+
+  function loadImageWithFallback(
+    img,
+    filename,
+    onFailure
+  ) {
+
+    let index = 0;
+
+
+    function tryNext() {
+
+      if (
+        index >=
+        PHOTO_PATHS.length
+      ) {
+
+        if (onFailure) {
+
+          onFailure();
+
+        }
+
+        return;
+
+      }
+
+
+      img.src =
+        PHOTO_PATHS[index]
+        +
+        filename;
+
+
+      index++;
+
+    }
+
+
+    img.onerror = tryNext;
+
+
+    tryNext();
+
+  }
+
+
+
+  /* =========================================
+     HERO
+     ========================================= */
+
+  if (heroImage) {
+
+    loadImageWithFallback(
+      heroImage,
+      HERO_PHOTO,
+      () => {
 
         console.warn(
-          "Could not find:",
-          filename
-        );
-
-        card.remove();
-
-      }
-
-    };
-
-
-    thumb.appendChild(img);
-
-
-    /* filename label */
-
-    const label = document.createElement("div");
-
-    label.className = "label";
-
-    label.textContent = filename;
-
-
-    card.appendChild(thumb);
-    card.appendChild(label);
-
-
-    /* Open large image */
-
-    card.addEventListener(
-      "click",
-      () => {
-
-        openImage(
-          img.src,
-          filename
+          "Hero image could not be found."
         );
 
       }
     );
 
-
-    return card;
-
   }
 
 
 
-  /* ==========================================
-     VIDEO CARDS
-     ========================================== */
-
-  function createVideoCard(filename) {
-
-    const card =
-      document.createElement("div");
-
-    card.className =
-      "card";
-
-
-    const thumb =
-      document.createElement("div");
-
-    thumb.className =
-      "thumb";
-
-
-    const poster =
-      document.createElement("div");
-
-    poster.className =
-      "videoPoster";
-
-
-    poster.innerHTML = `
-      <span class="play">▶</span>
-    `;
-
-
-    thumb.appendChild(poster);
-
-
-    const label =
-      document.createElement("div");
-
-    label.className =
-      "label";
-
-    label.textContent =
-      filename;
-
-
-    card.appendChild(thumb);
-    card.appendChild(label);
-
-
-    card.addEventListener(
-      "click",
-      () => {
-
-        openVideo(
-          filename
-        );
-
-      }
-    );
-
-
-    return card;
-
-  }
-
-
-
-  /* ==========================================
+  /* =========================================
      OPEN IMAGE
-     ========================================== */
+     ========================================= */
 
-  function openImage(src, title) {
+  function openImage(
+    filename
+  ) {
 
-    if (!modal) return;
+    if (
+      !modal ||
+      !modalContent
+    ) {
 
+      return;
 
-    modalTitle.textContent =
-      title || "Preview";
+    }
 
 
     modalContent.innerHTML =
       "";
 
 
+    modalTitle.textContent =
+      filename;
+
+
     const img =
       document.createElement("img");
 
 
-    img.src =
-      src;
+    loadImageWithFallback(
+      img,
+      filename,
+      () => {
 
-    img.alt =
-      "";
+        modalContent.innerHTML = `
+          <div class="error">
+            Could not load ${filename}
+          </div>
+        `;
+
+      }
+    );
 
 
-    modalContent.appendChild(img);
+    modalContent.appendChild(
+      img
+    );
 
 
     modal.classList.add(
@@ -281,21 +368,30 @@
 
 
 
-  /* ==========================================
-     OPEN VIDEO WITH AUTOMATIC PATH FALLBACK
-     ========================================== */
+  /* =========================================
+     OPEN VIDEO
+     ========================================= */
 
-  function openVideo(filename) {
+  function openVideo(
+    filename
+  ) {
 
-    if (!modal) return;
+    if (
+      !modal ||
+      !modalContent
+    ) {
 
+      return;
 
-    modalTitle.textContent =
-      filename;
+    }
 
 
     modalContent.innerHTML =
       "";
+
+
+    modalTitle.textContent =
+      filename;
 
 
     const video =
@@ -305,24 +401,27 @@
     video.controls =
       true;
 
-    video.playsInline =
-      true;
 
     video.autoplay =
       true;
+
+
+    video.playsInline =
+      true;
+
 
     video.preload =
       "metadata";
 
 
-    let pathIndex =
+    let index =
       0;
 
 
-    function tryVideo() {
+    function tryNextVideo() {
 
       if (
-        pathIndex >=
+        index >=
         VIDEO_PATHS.length
       ) {
 
@@ -338,8 +437,12 @@
 
 
       video.src =
-        VIDEO_PATHS[pathIndex] +
+        VIDEO_PATHS[index]
+        +
         filename;
+
+
+      index++;
 
 
       video.load();
@@ -349,13 +452,7 @@
 
     video.addEventListener(
       "error",
-      () => {
-
-        pathIndex++;
-
-        tryVideo();
-
-      }
+      tryNextVideo
     );
 
 
@@ -363,7 +460,8 @@
       "loadedmetadata",
       () => {
 
-        video.play()
+        video
+          .play()
           .catch(() => {});
 
       }
@@ -390,25 +488,28 @@
       "hidden";
 
 
-    tryVideo();
+    tryNextVideo();
 
   }
 
 
 
-  /* ==========================================
+  /* =========================================
      CLOSE MODAL
-     ========================================== */
+     ========================================= */
 
   function closeModal() {
 
-    if (!modal) return;
+    if (!modal) {
+
+      return;
+
+    }
 
 
     const video =
-      modalContent.querySelector(
-        "video"
-      );
+      modalContent
+        ?.querySelector("video");
 
 
     if (video) {
@@ -435,8 +536,12 @@
     );
 
 
-    modalContent.innerHTML =
-      "";
+    if (modalContent) {
+
+      modalContent.innerHTML =
+        "";
+
+    }
 
 
     document.body.style.overflow =
@@ -445,10 +550,6 @@
   }
 
 
-
-  /* ==========================================
-     CLOSE BUTTON
-     ========================================== */
 
   if (closeBtn) {
 
@@ -461,16 +562,15 @@
 
 
 
-  /* Click dark background to close */
-
   if (modal) {
 
     modal.addEventListener(
       "click",
-      (event) => {
+      event => {
 
         if (
-          event.target === modal
+          event.target ===
+          modal
         ) {
 
           closeModal();
@@ -484,14 +584,13 @@
 
 
 
-  /* ESC key closes preview */
-
   document.addEventListener(
     "keydown",
-    (event) => {
+    event => {
 
       if (
-        event.key === "Escape"
+        event.key ===
+        "Escape"
       ) {
 
         closeModal();
@@ -503,63 +602,537 @@
 
 
 
-  /* ==========================================
-     RENDER PHOTOS
-     ========================================== */
+  /* =========================================
+     NORMAL PHOTO CARD
+     ========================================= */
 
-  photoGrid.innerHTML =
-    "";
+  function createPhotoCard(
+    filename
+  ) {
+
+    const card =
+      document.createElement("div");
 
 
-  photoFiles.forEach(
-    filename => {
+    card.className =
+      "photo-card";
 
-      photoGrid.appendChild(
-        createPhotoCard(filename)
+
+    const img =
+      document.createElement("img");
+
+
+    img.alt =
+      "";
+
+
+    img.loading =
+      "lazy";
+
+
+    loadImageWithFallback(
+      img,
+      filename,
+      () => {
+
+        card.remove();
+
+      }
+    );
+
+
+    card.appendChild(
+      img
+    );
+
+
+    card.addEventListener(
+      "click",
+      () => {
+
+        openImage(
+          filename
+        );
+
+      }
+    );
+
+
+    return card;
+
+  }
+
+
+
+  /* =========================================
+     NORMAL VIDEO CARD
+     ========================================= */
+
+  function createVideoCard(
+    filename,
+    index
+  ) {
+
+    const card =
+      document.createElement("div");
+
+
+    card.className =
+      "video-card";
+
+
+    const play =
+      document.createElement("div");
+
+
+    play.className =
+      "play";
+
+
+    play.textContent =
+      "▶";
+
+
+    const number =
+      document.createElement("div");
+
+
+    number.className =
+      "video-number";
+
+
+    number.textContent =
+      String(index + 1)
+        .padStart(2, "0");
+
+
+    card.appendChild(
+      play
+    );
+
+
+    card.appendChild(
+      number
+    );
+
+
+    card.addEventListener(
+      "click",
+      () => {
+
+        openVideo(
+          filename
+        );
+
+      }
+    );
+
+
+    return card;
+
+  }
+
+
+
+  /* =========================================
+     FEATURE IMAGE CARD
+     ========================================= */
+
+  function createFeatureImage(
+    filename,
+    badge
+  ) {
+
+    const card =
+      document.createElement("div");
+
+
+    card.className =
+      "feature-card";
+
+
+    const img =
+      document.createElement("img");
+
+
+    img.alt =
+      "";
+
+
+    img.loading =
+      "lazy";
+
+
+    loadImageWithFallback(
+      img,
+      filename,
+      () => {
+
+        card.remove();
+
+      }
+    );
+
+
+    const badgeElement =
+      document.createElement("div");
+
+
+    badgeElement.className =
+      "feature-badge";
+
+
+    badgeElement.textContent =
+      badge;
+
+
+    card.appendChild(
+      img
+    );
+
+
+    card.appendChild(
+      badgeElement
+    );
+
+
+    card.addEventListener(
+      "click",
+      () => {
+
+        openImage(
+          filename
+        );
+
+      }
+    );
+
+
+    return card;
+
+  }
+
+
+
+  /* =========================================
+     FEATURE VIDEO CARD
+     ========================================= */
+
+  function createFeatureVideo(
+    filename,
+    badge
+  ) {
+
+    const card =
+      document.createElement("div");
+
+
+    card.className =
+      "feature-card feature-video-card";
+
+
+    const play =
+      document.createElement("div");
+
+
+    play.className =
+      "play";
+
+
+    play.textContent =
+      "▶";
+
+
+    const badgeElement =
+      document.createElement("div");
+
+
+    badgeElement.className =
+      "feature-badge";
+
+
+    badgeElement.textContent =
+      badge;
+
+
+    card.appendChild(
+      play
+    );
+
+
+    card.appendChild(
+      badgeElement
+    );
+
+
+    card.addEventListener(
+      "click",
+      () => {
+
+        openVideo(
+          filename
+        );
+
+      }
+    );
+
+
+    return card;
+
+  }
+
+
+
+  /* =========================================
+     FEATURE CARD ROUTER
+     ========================================= */
+
+  function createFeatureCard(
+    item,
+    badge
+  ) {
+
+    if (
+      item.type ===
+      "video"
+    ) {
+
+      return createFeatureVideo(
+        item.file,
+        badge
       );
 
     }
-  );
 
 
-  /* ==========================================
-     RENDER VIDEOS
-     ========================================== */
+    return createFeatureImage(
+      item.file,
+      badge
+    );
 
-  videoGrid.innerHTML =
-    "";
-
-
-  videoFiles.forEach(
-    filename => {
-
-      videoGrid.appendChild(
-        createVideoCard(filename)
-      );
-
-    }
-  );
+  }
 
 
 
-  /* ==========================================
-     COUNTS
-     ========================================== */
+  /* =========================================
+     KEEP SPECIAL + RECENT ITEMS
+     OUT OF REGULAR GALLERIES
+     ========================================= */
+
+  const featuredPhotoNames =
+    new Set(
+
+      [
+        ...recentlyAdded,
+        ...specialContent
+      ]
+
+        .filter(
+          item =>
+            item.type ===
+            "image"
+        )
+
+        .map(
+          item =>
+            item.file
+        )
+
+    );
+
+
+  const featuredVideoNames =
+    new Set(
+
+      [
+        ...recentlyAdded,
+        ...specialContent
+      ]
+
+        .filter(
+          item =>
+            item.type ===
+            "video"
+        )
+
+        .map(
+          item =>
+            item.file
+        )
+
+    );
+
+
+
+  const regularPhotos =
+    allPhotos.filter(
+      filename =>
+        !featuredPhotoNames
+          .has(filename)
+    );
+
+
+  const regularVideos =
+    allVideos.filter(
+      filename =>
+        !featuredVideoNames
+          .has(filename)
+    );
+
+
+
+  /* =========================================
+     RENDER RECENTLY ADDED
+     ========================================= */
+
+  if (recentGrid) {
+
+    recentGrid.innerHTML =
+      "";
+
+
+    recentlyAdded.forEach(
+      item => {
+
+        recentGrid.appendChild(
+
+          createFeatureCard(
+            item,
+            "NEW"
+          )
+
+        );
+
+      }
+    );
+
+  }
+
+
+
+  if (recentCount) {
+
+    recentCount.textContent =
+      `${recentlyAdded.length} NEW`;
+
+  }
+
+
+
+  /* =========================================
+     RENDER SPECIAL
+     ========================================= */
+
+  if (specialGrid) {
+
+    specialGrid.innerHTML =
+      "";
+
+
+    specialContent.forEach(
+      item => {
+
+        specialGrid.appendChild(
+
+          createFeatureCard(
+            item,
+            "EXCLUSIVE"
+          )
+
+        );
+
+      }
+    );
+
+  }
+
+
+
+  if (specialCount) {
+
+    specialCount.textContent =
+      `${specialContent.length} EXCLUSIVE`;
+
+  }
+
+
+
+  /* =========================================
+     RENDER NORMAL PHOTOS
+     ========================================= */
+
+  if (photoGrid) {
+
+    photoGrid.innerHTML =
+      "";
+
+
+    regularPhotos.forEach(
+      filename => {
+
+        photoGrid.appendChild(
+
+          createPhotoCard(
+            filename
+          )
+
+        );
+
+      }
+    );
+
+  }
+
+
 
   if (photoCount) {
 
     photoCount.textContent =
-      `${photoFiles.length} PHOTOS`;
+      `${regularPhotos.length} PHOTOS`;
 
   }
+
+
+
+  /* =========================================
+     RENDER NORMAL VIDEOS
+     ========================================= */
+
+  if (videoGrid) {
+
+    videoGrid.innerHTML =
+      "";
+
+
+    regularVideos.forEach(
+      (
+        filename,
+        index
+      ) => {
+
+        videoGrid.appendChild(
+
+          createVideoCard(
+            filename,
+            index
+          )
+
+        );
+
+      }
+    );
+
+  }
+
 
 
   if (videoCount) {
 
     videoCount.textContent =
-      `${videoFiles.length} VIDEOS`;
+      `${regularVideos.length} VIDEOS`;
 
   }
+
 
 
 })();
