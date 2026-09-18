@@ -1,52 +1,18 @@
-(() => {
+document.addEventListener("DOMContentLoaded", () => {
+  "use strict";
 
-  /* =========================================
-     ASHLEY DANIELLE PORTFOLIO
-     =========================================
-     
-     SECTIONS:
-     - Recently Added
-     - Photo Gallery
-     - Video Gallery
-
+  /* =====================================================
+     PRIVATE GALLERY
+     Sections: Recently Added, Photos, Videos
      No photos.json or videos.json required.
-     ========================================= */
-
-
-  /* =========================================
-     HERO IMAGE
-     ========================================= */
+     ===================================================== */
 
   const HERO_PHOTO = "photo1.jpeg";
 
-
-  /* =========================================
-     ALL PHOTOS
-     ========================================= */
-
   const allPhotos = [
-
-    /* photo1 - photo27 */
-    ...Array.from(
-      { length: 27 },
-      (_, i) => `photo${i + 1}.jpeg`
-    ),
-
-    /* photo29 - photo38 */
-    ...Array.from(
-      { length: 10 },
-      (_, i) => `photo${i + 29}.jpeg`
-    ),
-
-    /* photo300 - photo317 */
-    ...Array.from(
-      { length: 18 },
-      (_, i) => `photo${i + 300}.jpeg`
-    ),
-
-
-    /* NEW PHOTOS */
-
+    ...Array.from({ length: 27 }, (_, i) => `photo${i + 1}.jpeg`),
+    ...Array.from({ length: 10 }, (_, i) => `photo${i + 29}.jpeg`),
+    ...Array.from({ length: 18 }, (_, i) => `photo${i + 300}.jpeg`),
     "IMG_0045.jpeg",
     "IMG_0413.jpeg",
     "IMG_0607.jpeg",
@@ -60,16 +26,9 @@
     "Unknown-6.jpg",
     "photo4444.jpg",
     "photo333333.jpeg"
-
   ];
 
-
-  /* =========================================
-     ALL VIDEOS
-     ========================================= */
-
   const allVideos = [
-
     "video1.mp4",
     "video2.mp4",
     "video3.mp4",
@@ -83,953 +42,262 @@
     "video11.mp4",
     "video12.mp4",
     "video13.mp4",
-
     "video20.mp4",
     "video21.mp4",
     "video22.mp4",
     "video23.mp4",
-
     "0918 (1).mp4",
-
     "copy_EC7B19D9-F53C-478E-BD0C-8F66A7D330F4.mp4"
-
   ];
 
-
-  /* =========================================
-     RECENTLY ADDED
-     
-     Put whatever you want featured at the
-     top of your site here.
-     ========================================= */
-
+  /* Change only this list when you want to change Recently Added. */
   const recentlyAdded = [
-
-    {
-      type: "video",
-      file: "0918 (1).mp4"
-    },
-
-    {
-      type: "video",
-      file: "copy_EC7B19D9-F53C-478E-BD0C-8F66A7D330F4.mp4"
-    },
-
-    {
-      type: "image",
-      file: "photo4444.jpg"
-    },
-
-    {
-      type: "image",
-      file: "photo333333.jpeg"
-    },
-
-    {
-      type: "video",
-      file: "video23.mp4"
-    },
-
-    {
-      type: "video",
-      file: "video22.mp4"
-    },
-
-    {
-      type: "image",
-      file: "IMG_0045.jpeg"
-    },
-
-    {
-      type: "image",
-      file: "IMG_0413.jpeg"
-    }
-
+    { type: "video", file: "0918 (1).mp4" },
+    { type: "video", file: "copy_EC7B19D9-F53C-478E-BD0C-8F66A7D330F4.mp4" },
+    { type: "image", file: "photo4444.jpg" },
+    { type: "image", file: "photo333333.jpeg" },
+    { type: "video", file: "video23.mp4" },
+    { type: "video", file: "video22.mp4" },
+    { type: "image", file: "IMG_0045.jpeg" },
+    { type: "image", file: "IMG_0413.jpeg" }
   ];
 
+  /* Your older repo structure used /folder/. The second path supports
+     files placed directly inside photo/ and videos/. */
+  const PHOTO_PATHS = ["photo/folder/", "photo/"];
+  const VIDEO_PATHS = ["videos/folder/", "videos/", ""];
 
-  /* =========================================
-     POSSIBLE PHOTO LOCATIONS
-     ========================================= */
+  const heroImage = document.getElementById("heroImage");
+  const recentGrid = document.getElementById("recentGrid");
+  const photoGrid = document.getElementById("photoGrid");
+  const videoGrid = document.getElementById("videoGrid");
+  const recentCount = document.getElementById("recentCount");
+  const photoCount = document.getElementById("photoCount");
+  const videoCount = document.getElementById("videoCount");
+  const modal = document.getElementById("modal");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalContent = document.getElementById("modalContent");
+  const closeBtn = document.getElementById("closeBtn");
 
-  const PHOTO_PATHS = [
-
-    "photo/folder/",
-    "photo/"
-
-  ];
-
-
-  /* =========================================
-     POSSIBLE VIDEO LOCATIONS
-     ========================================= */
-
-  const VIDEO_PATHS = [
-
-    "videos/folder/",
-    "videos/",
-    ""
-
-  ];
-
-
-  /* =========================================
-     PAGE ELEMENTS
-     ========================================= */
-
-  const heroImage =
-    document.getElementById("heroImage");
-
-  const recentGrid =
-    document.getElementById("recentGrid");
-
-  const photoGrid =
-    document.getElementById("photoGrid");
-
-  const videoGrid =
-    document.getElementById("videoGrid");
-
-  const recentCount =
-    document.getElementById("recentCount");
-
-  const photoCount =
-    document.getElementById("photoCount");
-
-  const videoCount =
-    document.getElementById("videoCount");
-
-  const modal =
-    document.getElementById("modal");
-
-  const modalTitle =
-    document.getElementById("modalTitle");
-
-  const modalContent =
-    document.getElementById("modalContent");
-
-  const closeBtn =
-    document.getElementById("closeBtn");
-
-
-  /* =========================================
-     SAFE FILE URL
-     ========================================= */
-
-  function safeFilename(filename) {
-
-    return encodeURIComponent(filename)
-      .replace(/%2F/g, "/");
-
+  function encoded(filename) {
+    return encodeURIComponent(filename);
   }
 
+  function tryImagePaths(img, filename, onFailure) {
+    let i = 0;
 
-  /* =========================================
-     PHOTO FALLBACK LOADER
-     ========================================= */
-
-  function loadImageWithFallback(
-    img,
-    filename,
-    onFailure
-  ) {
-
-    let index = 0;
-
-
-    function tryNext() {
-
-      if (index >= PHOTO_PATHS.length) {
-
-        if (onFailure) {
-          onFailure();
-        }
-
+    function next() {
+      if (i >= PHOTO_PATHS.length) {
+        img.onerror = null;
+        if (onFailure) onFailure();
         return;
-
       }
-
-
-      img.src =
-        PHOTO_PATHS[index]
-        +
-        safeFilename(filename);
-
-
-      index++;
-
+      img.src = PHOTO_PATHS[i++] + encoded(filename);
     }
 
-
-    img.onerror = tryNext;
-
-    tryNext();
-
+    img.onerror = next;
+    next();
   }
 
-
-  /* =========================================
-     HERO IMAGE
-     ========================================= */
-
-  if (heroImage) {
-
-    loadImageWithFallback(
-
-      heroImage,
-
-      HERO_PHOTO,
-
-      () => {
-
-        console.warn(
-          "Hero image not found:",
-          HERO_PHOTO
-        );
-
-      }
-
-    );
-
-  }
-
-
-  /* =========================================
-     OPEN PHOTO
-     ========================================= */
-
-  function openImage(filename) {
-
-    if (!modal || !modalContent) {
-      return;
-    }
-
-
-    modalContent.innerHTML = "";
-
-
-    if (modalTitle) {
-      modalTitle.textContent = "Photo";
-    }
-
-
-    const img =
-      document.createElement("img");
-
-
-    img.alt =
-      "Portfolio photo";
-
-
-    loadImageWithFallback(
-
-      img,
-
-      filename,
-
-      () => {
-
-        modalContent.innerHTML = `
-          <div class="error">
-            Could not load ${filename}
-          </div>
-        `;
-
-      }
-
-    );
-
-
-    modalContent.appendChild(img);
-
-
+  function openModal() {
+    if (!modal) return;
     modal.classList.add("open");
-
-
-    modal.setAttribute(
-      "aria-hidden",
-      "false"
-    );
-
-
-    document.body.style.overflow =
-      "hidden";
-
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
   }
-
-
-  /* =========================================
-     OPEN VIDEO
-     ========================================= */
-
-  function openVideo(filename) {
-
-    if (!modal || !modalContent) {
-      return;
-    }
-
-
-    modalContent.innerHTML = "";
-
-
-    if (modalTitle) {
-      modalTitle.textContent = "Video";
-    }
-
-
-    const video =
-      document.createElement("video");
-
-
-    video.controls = true;
-
-    video.autoplay = true;
-
-    video.playsInline = true;
-
-    video.preload = "metadata";
-
-
-    let pathIndex = 0;
-
-    let successfullyLoaded = false;
-
-
-    function tryNextVideo() {
-
-      if (successfullyLoaded) {
-        return;
-      }
-
-
-      if (pathIndex >= VIDEO_PATHS.length) {
-
-        modalContent.innerHTML = `
-          <div class="error">
-            Could not load ${filename}
-          </div>
-        `;
-
-
-        console.warn(
-          "Video not found:",
-          filename
-        );
-
-
-        return;
-
-      }
-
-
-      video.src =
-        VIDEO_PATHS[pathIndex]
-        +
-        safeFilename(filename);
-
-
-      pathIndex++;
-
-
-      video.load();
-
-    }
-
-
-    video.addEventListener(
-      "loadedmetadata",
-      () => {
-
-        successfullyLoaded = true;
-
-
-        video
-          .play()
-          .catch(() => {});
-
-      }
-    );
-
-
-    video.addEventListener(
-      "error",
-      () => {
-
-        if (!successfullyLoaded) {
-          tryNextVideo();
-        }
-
-      }
-    );
-
-
-    modalContent.appendChild(video);
-
-
-    modal.classList.add("open");
-
-
-    modal.setAttribute(
-      "aria-hidden",
-      "false"
-    );
-
-
-    document.body.style.overflow =
-      "hidden";
-
-
-    tryNextVideo();
-
-  }
-
-
-  /* =========================================
-     CLOSE MODAL
-     ========================================= */
 
   function closeModal() {
+    if (!modal) return;
 
-    if (!modal) {
-      return;
+    const playingVideo = modalContent ? modalContent.querySelector("video") : null;
+    if (playingVideo) {
+      playingVideo.pause();
+      playingVideo.removeAttribute("src");
+      playingVideo.load();
     }
-
-
-    const video =
-      modalContent
-        ?.querySelector("video");
-
-
-    if (video) {
-
-      video.pause();
-
-      video.removeAttribute("src");
-
-      video.load();
-
-    }
-
 
     modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    if (modalContent) modalContent.innerHTML = "";
+    document.body.style.overflow = "";
+  }
 
+  function openImage(filename) {
+    if (!modalContent) return;
+    modalContent.innerHTML = "";
+    if (modalTitle) modalTitle.textContent = "PHOTO";
 
-    modal.setAttribute(
-      "aria-hidden",
-      "true"
-    );
+    const img = document.createElement("img");
+    img.alt = "Portfolio photo";
+    tryImagePaths(img, filename, () => {
+      modalContent.innerHTML = `<div class="error">Could not load ${filename}</div>`;
+    });
 
+    modalContent.appendChild(img);
+    openModal();
+  }
 
-    if (modalContent) {
+  function openVideo(filename) {
+    if (!modalContent) return;
+    modalContent.innerHTML = "";
+    if (modalTitle) modalTitle.textContent = "VIDEO";
 
-      modalContent.innerHTML = "";
+    const video = document.createElement("video");
+    video.controls = true;
+    video.autoplay = true;
+    video.playsInline = true;
+    video.preload = "metadata";
 
+    let i = 0;
+    let loaded = false;
+
+    function next() {
+      if (loaded) return;
+      if (i >= VIDEO_PATHS.length) {
+        modalContent.innerHTML = `<div class="error">Could not load ${filename}</div>`;
+        return;
+      }
+      video.src = VIDEO_PATHS[i++] + encoded(filename);
+      video.load();
     }
 
+    video.addEventListener("loadedmetadata", () => {
+      loaded = true;
+      video.play().catch(() => {});
+    });
 
-    document.body.style.overflow =
-      "";
+    video.addEventListener("error", () => {
+      if (!loaded) next();
+    });
 
+    modalContent.appendChild(video);
+    openModal();
+    next();
   }
-
-
-  /* Close button */
-
-  if (closeBtn) {
-
-    closeBtn.addEventListener(
-      "click",
-      closeModal
-    );
-
-  }
-
-
-  /* Click black background */
-
-  if (modal) {
-
-    modal.addEventListener(
-      "click",
-      event => {
-
-        if (event.target === modal) {
-
-          closeModal();
-
-        }
-
-      }
-    );
-
-  }
-
-
-  /* Escape key */
-
-  document.addEventListener(
-    "keydown",
-    event => {
-
-      if (event.key === "Escape") {
-
-        closeModal();
-
-      }
-
-    }
-  );
-
-
-  /* =========================================
-     REGULAR PHOTO CARD
-     ========================================= */
 
   function createPhotoCard(filename) {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "photo-card";
+    card.setAttribute("aria-label", "Open photo");
 
-    const card =
-      document.createElement("div");
+    const img = document.createElement("img");
+    img.alt = "Portfolio photo";
+    img.loading = "lazy";
 
-
-    card.className =
-      "photo-card";
-
-
-    const img =
-      document.createElement("img");
-
-
-    img.alt =
-      "Portfolio photo";
-
-
-    img.loading =
-      "lazy";
-
-
-    loadImageWithFallback(
-
-      img,
-
-      filename,
-
-      () => {
-
-        console.warn(
-          "Photo not found:",
-          filename
-        );
-
-
-        card.remove();
-
-      }
-
-    );
-
-
+    tryImagePaths(img, filename, () => card.remove());
     card.appendChild(img);
-
-
-    card.addEventListener(
-      "click",
-      () => {
-
-        openImage(filename);
-
-      }
-    );
-
-
+    card.addEventListener("click", () => openImage(filename));
     return card;
-
   }
 
+  function createVideoCard(filename, index) {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "video-card";
+    card.setAttribute("aria-label", `Play video ${index + 1}`);
 
-  /* =========================================
-     REGULAR VIDEO CARD
-     ========================================= */
+    const play = document.createElement("span");
+    play.className = "play";
+    play.textContent = "▶";
 
-  function createVideoCard(
-    filename,
-    index
-  ) {
+    const number = document.createElement("span");
+    number.className = "video-number";
+    number.textContent = String(index + 1).padStart(2, "0");
 
-    const card =
-      document.createElement("div");
-
-
-    card.className =
-      "video-card";
-
-
-    const play =
-      document.createElement("div");
-
-
-    play.className =
-      "play";
-
-
-    play.textContent =
-      "▶";
-
-
-    const number =
-      document.createElement("div");
-
-
-    number.className =
-      "video-number";
-
-
-    number.textContent =
-      String(index + 1)
-        .padStart(2, "0");
-
-
-    card.appendChild(play);
-
-    card.appendChild(number);
-
-
-    card.addEventListener(
-      "click",
-      () => {
-
-        openVideo(filename);
-
-      }
-    );
-
-
+    card.append(play, number);
+    card.addEventListener("click", () => openVideo(filename));
     return card;
-
   }
-
-
-  /* =========================================
-     RECENT PHOTO CARD
-     ========================================= */
-
-  function createRecentImage(filename) {
-
-    const card =
-      document.createElement("div");
-
-
-    card.className =
-      "feature-card";
-
-
-    const img =
-      document.createElement("img");
-
-
-    img.alt =
-      "Recently added photo";
-
-
-    img.loading =
-      "lazy";
-
-
-    loadImageWithFallback(
-
-      img,
-
-      filename,
-
-      () => {
-
-        console.warn(
-          "Recent photo not found:",
-          filename
-        );
-
-
-        card.remove();
-
-      }
-
-    );
-
-
-    const badge =
-      document.createElement("div");
-
-
-    badge.className =
-      "feature-badge";
-
-
-    badge.textContent =
-      "NEW";
-
-
-    card.appendChild(img);
-
-    card.appendChild(badge);
-
-
-    card.addEventListener(
-      "click",
-      () => {
-
-        openImage(filename);
-
-      }
-    );
-
-
-    return card;
-
-  }
-
-
-  /* =========================================
-     RECENT VIDEO CARD
-     ========================================= */
-
-  function createRecentVideo(filename) {
-
-    const card =
-      document.createElement("div");
-
-
-    card.className =
-      "feature-card feature-video-card";
-
-
-    const play =
-      document.createElement("div");
-
-
-    play.className =
-      "play";
-
-
-    play.textContent =
-      "▶";
-
-
-    const badge =
-      document.createElement("div");
-
-
-    badge.className =
-      "feature-badge";
-
-
-    badge.textContent =
-      "NEW";
-
-
-    card.appendChild(play);
-
-    card.appendChild(badge);
-
-
-    card.addEventListener(
-      "click",
-      () => {
-
-        openVideo(filename);
-
-      }
-    );
-
-
-    return card;
-
-  }
-
-
-  /* =========================================
-     RECENT CARD ROUTER
-     ========================================= */
 
   function createRecentCard(item) {
-
     if (item.type === "video") {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "feature-card feature-video-card";
+      card.setAttribute("aria-label", "Play recently added video");
 
-      return createRecentVideo(
-        item.file
-      );
+      const play = document.createElement("span");
+      play.className = "play";
+      play.textContent = "▶";
 
+      const badge = document.createElement("span");
+      badge.className = "feature-badge";
+      badge.textContent = "NEW";
+
+      card.append(play, badge);
+      card.addEventListener("click", () => openVideo(item.file));
+      return card;
     }
 
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "feature-card";
+    card.setAttribute("aria-label", "Open recently added photo");
 
-    return createRecentImage(
-      item.file
-    );
+    const img = document.createElement("img");
+    img.alt = "Recently added photo";
+    img.loading = "lazy";
+    tryImagePaths(img, item.file, () => card.remove());
 
+    const badge = document.createElement("span");
+    badge.className = "feature-badge";
+    badge.textContent = "NEW";
+
+    card.append(img, badge);
+    card.addEventListener("click", () => openImage(item.file));
+    return card;
   }
 
+  try {
+    if (!recentGrid || !photoGrid || !videoGrid) {
+      throw new Error("Gallery containers are missing from index.html.");
+    }
 
-  /* =========================================
-     FIND ITEMS USED IN RECENTLY ADDED
-     ========================================= */
+    if (heroImage) {
+      tryImagePaths(heroImage, HERO_PHOTO, () => {
+        heroImage.style.display = "none";
+      });
+    }
 
-  const recentPhotoNames =
-    new Set(
-
-      recentlyAdded
-
-        .filter(
-          item =>
-            item.type === "image"
-        )
-
-        .map(
-          item =>
-            item.file
-        )
-
+    const recentPhotoNames = new Set(
+      recentlyAdded.filter(item => item.type === "image").map(item => item.file)
+    );
+    const recentVideoNames = new Set(
+      recentlyAdded.filter(item => item.type === "video").map(item => item.file)
     );
 
+    const regularPhotos = allPhotos.filter(name => !recentPhotoNames.has(name));
+    const regularVideos = allVideos.filter(name => !recentVideoNames.has(name));
 
-  const recentVideoNames =
-    new Set(
+    recentGrid.replaceChildren(...recentlyAdded.map(createRecentCard));
+    photoGrid.replaceChildren(...regularPhotos.map(createPhotoCard));
+    videoGrid.replaceChildren(...regularVideos.map(createVideoCard));
 
-      recentlyAdded
+    if (recentCount) recentCount.textContent = `${recentlyAdded.length} NEW`;
+    if (photoCount) photoCount.textContent = `${regularPhotos.length} PHOTOS`;
+    if (videoCount) videoCount.textContent = `${regularVideos.length} VIDEOS`;
 
-        .filter(
-          item =>
-            item.type === "video"
-        )
-
-        .map(
-          item =>
-            item.file
-        )
-
-    );
-
-
-  /* =========================================
-     REMOVE RECENT ITEMS FROM REGULAR GALLERY
-
-     This prevents duplicates.
-     ========================================= */
-
-  const regularPhotos =
-    allPhotos.filter(
-
-      filename =>
-        !recentPhotoNames.has(filename)
-
-    );
-
-
-  const regularVideos =
-    allVideos.filter(
-
-      filename =>
-        !recentVideoNames.has(filename)
-
-    );
-
-
-  /* =========================================
-     RENDER RECENTLY ADDED
-     ========================================= */
-
-  if (recentGrid) {
-
-    recentGrid.innerHTML = "";
-
-
-    recentlyAdded.forEach(
-      item => {
-
-        recentGrid.appendChild(
-
-          createRecentCard(item)
-
-        );
-
-      }
-    );
-
+    document.documentElement.classList.add("gallery-ready");
+    console.log("Private Gallery loaded", {
+      recent: recentlyAdded.length,
+      photos: regularPhotos.length,
+      videos: regularVideos.length
+    });
+  } catch (error) {
+    console.error("Gallery error:", error);
+    if (recentGrid) {
+      recentGrid.innerHTML = `<div class="error">Gallery error: ${error.message}</div>`;
+    }
   }
 
-
-  if (recentCount) {
-
-    recentCount.textContent =
-      `${recentlyAdded.length} NEW`;
-
+  if (closeBtn) closeBtn.addEventListener("click", closeModal);
+  if (modal) {
+    modal.addEventListener("click", event => {
+      if (event.target === modal) closeModal();
+    });
   }
-
-
-  /* =========================================
-     RENDER PHOTO GALLERY
-     ========================================= */
-
-  if (photoGrid) {
-
-    photoGrid.innerHTML = "";
-
-
-    regularPhotos.forEach(
-      filename => {
-
-        photoGrid.appendChild(
-
-          createPhotoCard(filename)
-
-        );
-
-      }
-    );
-
-  }
-
-
-  if (photoCount) {
-
-    photoCount.textContent =
-      `${regularPhotos.length} PHOTOS`;
-
-  }
-
-
-  /* =========================================
-     RENDER VIDEO GALLERY
-     ========================================= */
-
-  if (videoGrid) {
-
-    videoGrid.innerHTML = "";
-
-
-    regularVideos.forEach(
-      (
-        filename,
-        index
-      ) => {
-
-        videoGrid.appendChild(
-
-          createVideoCard(
-            filename,
-            index
-          )
-
-        );
-
-      }
-    );
-
-  }
-
-
-  if (videoCount) {
-
-    videoCount.textContent =
-      `${regularVideos.length} VIDEOS`;
-
-  }
-
-
-})();
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") closeModal();
+  });
+});
