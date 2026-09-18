@@ -74,8 +74,8 @@
   const recentlyAdded = [
 
     {
-      type: "image",
-      file: "photo317.jpeg"
+      type: "video",
+      file: "0918 (1).mp4"
     },
 
     {
@@ -104,29 +104,7 @@
      normal photo/video gallery.
      ========================================= */
 
-  const specialContent = [
-
-    {
-      type: "image",
-      file: "photo310.jpeg"
-    },
-
-    {
-      type: "video",
-      file: "video12.mp4"
-    },
-
-    {
-      type: "image",
-      file: "photo311.jpeg"
-    },
-
-    {
-      type: "video",
-      file: "video11.mp4"
-    }
-
-  ];
+ 
 
 
 
