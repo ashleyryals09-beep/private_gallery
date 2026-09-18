@@ -3,14 +3,13 @@
   /* =========================================
      ASHLEY DANIELLE PORTFOLIO
      =========================================
+     
+     SECTIONS:
+     - Recently Added
+     - Photo Gallery
+     - Video Gallery
 
-     IMPORTANT:
-
-     This website does NOT use photos.json
-     or videos.json.
-
-     To change what appears in Recently Added
-     or Special Edition, edit the lists below.
+     No photos.json or videos.json required.
      ========================================= */
 
 
@@ -22,53 +21,86 @@
 
 
   /* =========================================
-     ALL PHOTO FILES
-
-     Current files based on your collection.
-     photo28.jpeg was NOT in your original list.
+     ALL PHOTOS
      ========================================= */
 
   const allPhotos = [
 
+    /* photo1 - photo27 */
     ...Array.from(
       { length: 27 },
       (_, i) => `photo${i + 1}.jpeg`
     ),
 
+    /* photo29 - photo38 */
     ...Array.from(
       { length: 10 },
       (_, i) => `photo${i + 29}.jpeg`
     ),
 
+    /* photo300 - photo317 */
     ...Array.from(
       { length: 18 },
       (_, i) => `photo${i + 300}.jpeg`
-    )
+    ),
+
+
+    /* NEW PHOTOS */
+
+    "IMG_0045.jpeg",
+    "IMG_0413.jpeg",
+    "IMG_0607.jpeg",
+    "IMG_0824.jpeg",
+    "IMG_0833.jpeg",
+    "IMG_1040.jpg",
+    "IMG_1444.jpeg",
+    "IMG_1512.jpeg",
+    "IMG_1687.jpeg",
+    "IMG_3612.jpeg",
+    "Unknown-6.jpg",
+    "photo4444.jpg",
+    "photo333333.jpeg"
 
   ];
 
 
-
   /* =========================================
-     ALL VIDEO FILES
+     ALL VIDEOS
      ========================================= */
 
-  const allVideos = Array.from(
-    { length: 13 },
-    (_, i) => `video${i + 1}.mp4`
-  );
+  const allVideos = [
 
+    "video1.mp4",
+    "video2.mp4",
+    "video3.mp4",
+    "video4.mp4",
+    "video5.mp4",
+    "video6.mp4",
+    "video7.mp4",
+    "video8.mp4",
+    "video9.mp4",
+    "video10.mp4",
+    "video11.mp4",
+    "video12.mp4",
+    "video13.mp4",
+
+    "video20.mp4",
+    "video21.mp4",
+    "video22.mp4",
+    "video23.mp4",
+
+    "0918 (1).mp4",
+
+    "copy_EC7B19D9-F53C-478E-BD0C-8F66A7D330F4.mp4"
+
+  ];
 
 
   /* =========================================
      RECENTLY ADDED
-
-     Put the newest content here.
-
-     type can be:
-     "image"
-     or
-     "video"
+     
+     Put whatever you want featured at the
+     top of your site here.
      ========================================= */
 
   const recentlyAdded = [
@@ -84,129 +116,115 @@
     },
 
     {
-      type: "video",
-      file: "video13.mp4"
+      type: "image",
+      file: "photo4444.jpg"
     },
 
     {
       type: "image",
-      file: "photo315.jpeg"
+      file: "photo333333.jpeg"
+    },
+
+    {
+      type: "video",
+      file: "video23.mp4"
+    },
+
+    {
+      type: "video",
+      file: "video22.mp4"
+    },
+
+    {
+      type: "image",
+      file: "IMG_0045.jpeg"
+    },
+
+    {
+      type: "image",
+      file: "IMG_0413.jpeg"
     }
 
   ];
 
 
-
   /* =========================================
-     SPECIAL / EXCLUSIVE
-
-     These will NOT also appear in the
-     normal photo/video gallery.
-     ========================================= */
-
- 
-
-
-
-  /* =========================================
-     POSSIBLE FOLDER LOCATIONS
-
-     Your old JSON showed:
-     photo/folder/photo1.jpeg
-
-     But this also supports:
-     photo/photo1.jpeg
-
-     Videos support:
-     videos/folder/video1.mp4
-     videos/video1.mp4
+     POSSIBLE PHOTO LOCATIONS
      ========================================= */
 
   const PHOTO_PATHS = [
 
     "photo/folder/",
-
     "photo/"
 
   ];
 
 
+  /* =========================================
+     POSSIBLE VIDEO LOCATIONS
+     ========================================= */
+
   const VIDEO_PATHS = [
 
     "videos/folder/",
-
     "videos/",
-
     ""
 
   ];
 
 
-
   /* =========================================
-     DOM ELEMENTS
+     PAGE ELEMENTS
      ========================================= */
 
   const heroImage =
     document.getElementById("heroImage");
 
-
   const recentGrid =
     document.getElementById("recentGrid");
-
-
-  const specialGrid =
-    document.getElementById("specialGrid");
-
 
   const photoGrid =
     document.getElementById("photoGrid");
 
-
   const videoGrid =
     document.getElementById("videoGrid");
-
 
   const recentCount =
     document.getElementById("recentCount");
 
-
-  const specialCount =
-    document.getElementById("specialCount");
-
-
   const photoCount =
     document.getElementById("photoCount");
-
 
   const videoCount =
     document.getElementById("videoCount");
 
-
   const modal =
     document.getElementById("modal");
-
 
   const modalTitle =
     document.getElementById("modalTitle");
 
-
   const modalContent =
     document.getElementById("modalContent");
-
 
   const closeBtn =
     document.getElementById("closeBtn");
 
 
+  /* =========================================
+     SAFE FILE URL
+     ========================================= */
+
+  function safeFilename(filename) {
+
+    return encodeURIComponent(filename)
+      .replace(/%2F/g, "/");
+
+  }
+
 
   /* =========================================
-     IMAGE FALLBACK LOADER
-
-     Automatically tries both:
-
-     photo/folder/
-     photo/
+     PHOTO FALLBACK LOADER
      ========================================= */
 
   function loadImageWithFallback(
@@ -220,15 +238,10 @@
 
     function tryNext() {
 
-      if (
-        index >=
-        PHOTO_PATHS.length
-      ) {
+      if (index >= PHOTO_PATHS.length) {
 
         if (onFailure) {
-
           onFailure();
-
         }
 
         return;
@@ -239,7 +252,7 @@
       img.src =
         PHOTO_PATHS[index]
         +
-        filename;
+        safeFilename(filename);
 
 
       index++;
@@ -249,68 +262,70 @@
 
     img.onerror = tryNext;
 
-
     tryNext();
 
   }
 
 
-
   /* =========================================
-     HERO
+     HERO IMAGE
      ========================================= */
 
   if (heroImage) {
 
     loadImageWithFallback(
+
       heroImage,
+
       HERO_PHOTO,
+
       () => {
 
         console.warn(
-          "Hero image could not be found."
+          "Hero image not found:",
+          HERO_PHOTO
         );
 
       }
+
     );
 
   }
 
 
-
   /* =========================================
-     OPEN IMAGE
+     OPEN PHOTO
      ========================================= */
 
-  function openImage(
-    filename
-  ) {
+  function openImage(filename) {
 
-    if (
-      !modal ||
-      !modalContent
-    ) {
-
+    if (!modal || !modalContent) {
       return;
-
     }
 
 
-    modalContent.innerHTML =
-      "";
+    modalContent.innerHTML = "";
 
 
-    modalTitle.textContent =
-      filename;
+    if (modalTitle) {
+      modalTitle.textContent = "Photo";
+    }
 
 
     const img =
       document.createElement("img");
 
 
+    img.alt =
+      "Portfolio photo";
+
+
     loadImageWithFallback(
+
       img,
+
       filename,
+
       () => {
 
         modalContent.innerHTML = `
@@ -320,17 +335,14 @@
         `;
 
       }
+
     );
 
 
-    modalContent.appendChild(
-      img
-    );
+    modalContent.appendChild(img);
 
 
-    modal.classList.add(
-      "open"
-    );
+    modal.classList.add("open");
 
 
     modal.setAttribute(
@@ -345,63 +357,51 @@
   }
 
 
-
   /* =========================================
      OPEN VIDEO
      ========================================= */
 
-  function openVideo(
-    filename
-  ) {
+  function openVideo(filename) {
 
-    if (
-      !modal ||
-      !modalContent
-    ) {
-
+    if (!modal || !modalContent) {
       return;
-
     }
 
 
-    modalContent.innerHTML =
-      "";
+    modalContent.innerHTML = "";
 
 
-    modalTitle.textContent =
-      filename;
+    if (modalTitle) {
+      modalTitle.textContent = "Video";
+    }
 
 
     const video =
       document.createElement("video");
 
 
-    video.controls =
-      true;
+    video.controls = true;
+
+    video.autoplay = true;
+
+    video.playsInline = true;
+
+    video.preload = "metadata";
 
 
-    video.autoplay =
-      true;
+    let pathIndex = 0;
 
-
-    video.playsInline =
-      true;
-
-
-    video.preload =
-      "metadata";
-
-
-    let index =
-      0;
+    let successfullyLoaded = false;
 
 
     function tryNextVideo() {
 
-      if (
-        index >=
-        VIDEO_PATHS.length
-      ) {
+      if (successfullyLoaded) {
+        return;
+      }
+
+
+      if (pathIndex >= VIDEO_PATHS.length) {
 
         modalContent.innerHTML = `
           <div class="error">
@@ -409,18 +409,25 @@
           </div>
         `;
 
+
+        console.warn(
+          "Video not found:",
+          filename
+        );
+
+
         return;
 
       }
 
 
       video.src =
-        VIDEO_PATHS[index]
+        VIDEO_PATHS[pathIndex]
         +
-        filename;
+        safeFilename(filename);
 
 
-      index++;
+      pathIndex++;
 
 
       video.load();
@@ -429,14 +436,11 @@
 
 
     video.addEventListener(
-      "error",
-      tryNextVideo
-    );
-
-
-    video.addEventListener(
       "loadedmetadata",
       () => {
+
+        successfullyLoaded = true;
+
 
         video
           .play()
@@ -446,14 +450,22 @@
     );
 
 
-    modalContent.appendChild(
-      video
+    video.addEventListener(
+      "error",
+      () => {
+
+        if (!successfullyLoaded) {
+          tryNextVideo();
+        }
+
+      }
     );
 
 
-    modal.classList.add(
-      "open"
-    );
+    modalContent.appendChild(video);
+
+
+    modal.classList.add("open");
 
 
     modal.setAttribute(
@@ -471,7 +483,6 @@
   }
 
 
-
   /* =========================================
      CLOSE MODAL
      ========================================= */
@@ -479,9 +490,7 @@
   function closeModal() {
 
     if (!modal) {
-
       return;
-
     }
 
 
@@ -494,18 +503,14 @@
 
       video.pause();
 
-      video.removeAttribute(
-        "src"
-      );
+      video.removeAttribute("src");
 
       video.load();
 
     }
 
 
-    modal.classList.remove(
-      "open"
-    );
+    modal.classList.remove("open");
 
 
     modal.setAttribute(
@@ -516,8 +521,7 @@
 
     if (modalContent) {
 
-      modalContent.innerHTML =
-        "";
+      modalContent.innerHTML = "";
 
     }
 
@@ -528,6 +532,7 @@
   }
 
 
+  /* Close button */
 
   if (closeBtn) {
 
@@ -539,6 +544,7 @@
   }
 
 
+  /* Click black background */
 
   if (modal) {
 
@@ -546,10 +552,7 @@
       "click",
       event => {
 
-        if (
-          event.target ===
-          modal
-        ) {
+        if (event.target === modal) {
 
           closeModal();
 
@@ -561,15 +564,13 @@
   }
 
 
+  /* Escape key */
 
   document.addEventListener(
     "keydown",
     event => {
 
-      if (
-        event.key ===
-        "Escape"
-      ) {
+      if (event.key === "Escape") {
 
         closeModal();
 
@@ -579,14 +580,11 @@
   );
 
 
-
   /* =========================================
-     NORMAL PHOTO CARD
+     REGULAR PHOTO CARD
      ========================================= */
 
-  function createPhotoCard(
-    filename
-  ) {
+  function createPhotoCard(filename) {
 
     const card =
       document.createElement("div");
@@ -601,7 +599,7 @@
 
 
     img.alt =
-      "";
+      "Portfolio photo";
 
 
     img.loading =
@@ -609,28 +607,34 @@
 
 
     loadImageWithFallback(
+
       img,
+
       filename,
+
       () => {
+
+        console.warn(
+          "Photo not found:",
+          filename
+        );
+
 
         card.remove();
 
       }
+
     );
 
 
-    card.appendChild(
-      img
-    );
+    card.appendChild(img);
 
 
     card.addEventListener(
       "click",
       () => {
 
-        openImage(
-          filename
-        );
+        openImage(filename);
 
       }
     );
@@ -641,9 +645,8 @@
   }
 
 
-
   /* =========================================
-     NORMAL VIDEO CARD
+     REGULAR VIDEO CARD
      ========================================= */
 
   function createVideoCard(
@@ -684,23 +687,16 @@
         .padStart(2, "0");
 
 
-    card.appendChild(
-      play
-    );
+    card.appendChild(play);
 
-
-    card.appendChild(
-      number
-    );
+    card.appendChild(number);
 
 
     card.addEventListener(
       "click",
       () => {
 
-        openVideo(
-          filename
-        );
+        openVideo(filename);
 
       }
     );
@@ -711,15 +707,11 @@
   }
 
 
-
   /* =========================================
-     FEATURE IMAGE CARD
+     RECENT PHOTO CARD
      ========================================= */
 
-  function createFeatureImage(
-    filename,
-    badge
-  ) {
+  function createRecentImage(filename) {
 
     const card =
       document.createElement("div");
@@ -734,7 +726,7 @@
 
 
     img.alt =
-      "";
+      "Recently added photo";
 
 
     img.loading =
@@ -742,45 +734,48 @@
 
 
     loadImageWithFallback(
+
       img,
+
       filename,
+
       () => {
+
+        console.warn(
+          "Recent photo not found:",
+          filename
+        );
+
 
         card.remove();
 
       }
+
     );
 
 
-    const badgeElement =
+    const badge =
       document.createElement("div");
 
 
-    badgeElement.className =
+    badge.className =
       "feature-badge";
 
 
-    badgeElement.textContent =
-      badge;
+    badge.textContent =
+      "NEW";
 
 
-    card.appendChild(
-      img
-    );
+    card.appendChild(img);
 
-
-    card.appendChild(
-      badgeElement
-    );
+    card.appendChild(badge);
 
 
     card.addEventListener(
       "click",
       () => {
 
-        openImage(
-          filename
-        );
+        openImage(filename);
 
       }
     );
@@ -791,15 +786,11 @@
   }
 
 
-
   /* =========================================
-     FEATURE VIDEO CARD
+     RECENT VIDEO CARD
      ========================================= */
 
-  function createFeatureVideo(
-    filename,
-    badge
-  ) {
+  function createRecentVideo(filename) {
 
     const card =
       document.createElement("div");
@@ -821,35 +812,28 @@
       "▶";
 
 
-    const badgeElement =
+    const badge =
       document.createElement("div");
 
 
-    badgeElement.className =
+    badge.className =
       "feature-badge";
 
 
-    badgeElement.textContent =
-      badge;
+    badge.textContent =
+      "NEW";
 
 
-    card.appendChild(
-      play
-    );
+    card.appendChild(play);
 
-
-    card.appendChild(
-      badgeElement
-    );
+    card.appendChild(badge);
 
 
     card.addEventListener(
       "click",
       () => {
 
-        openVideo(
-          filename
-        );
+        openVideo(filename);
 
       }
     );
@@ -860,55 +844,40 @@
   }
 
 
-
   /* =========================================
-     FEATURE CARD ROUTER
+     RECENT CARD ROUTER
      ========================================= */
 
-  function createFeatureCard(
-    item,
-    badge
-  ) {
+  function createRecentCard(item) {
 
-    if (
-      item.type ===
-      "video"
-    ) {
+    if (item.type === "video") {
 
-      return createFeatureVideo(
-        item.file,
-        badge
+      return createRecentVideo(
+        item.file
       );
 
     }
 
 
-    return createFeatureImage(
-      item.file,
-      badge
+    return createRecentImage(
+      item.file
     );
 
   }
 
 
-
   /* =========================================
-     KEEP SPECIAL + RECENT ITEMS
-     OUT OF REGULAR GALLERIES
+     FIND ITEMS USED IN RECENTLY ADDED
      ========================================= */
 
-  const featuredPhotoNames =
+  const recentPhotoNames =
     new Set(
 
-      [
-        ...recentlyAdded,
-        ...specialContent
-      ]
+      recentlyAdded
 
         .filter(
           item =>
-            item.type ===
-            "image"
+            item.type === "image"
         )
 
         .map(
@@ -919,18 +888,14 @@
     );
 
 
-  const featuredVideoNames =
+  const recentVideoNames =
     new Set(
 
-      [
-        ...recentlyAdded,
-        ...specialContent
-      ]
+      recentlyAdded
 
         .filter(
           item =>
-            item.type ===
-            "video"
+            item.type === "video"
         )
 
         .map(
@@ -941,22 +906,28 @@
     );
 
 
+  /* =========================================
+     REMOVE RECENT ITEMS FROM REGULAR GALLERY
+
+     This prevents duplicates.
+     ========================================= */
 
   const regularPhotos =
     allPhotos.filter(
+
       filename =>
-        !featuredPhotoNames
-          .has(filename)
+        !recentPhotoNames.has(filename)
+
     );
 
 
   const regularVideos =
     allVideos.filter(
-      filename =>
-        !featuredVideoNames
-          .has(filename)
-    );
 
+      filename =>
+        !recentVideoNames.has(filename)
+
+    );
 
 
   /* =========================================
@@ -965,8 +936,7 @@
 
   if (recentGrid) {
 
-    recentGrid.innerHTML =
-      "";
+    recentGrid.innerHTML = "";
 
 
     recentlyAdded.forEach(
@@ -974,10 +944,7 @@
 
         recentGrid.appendChild(
 
-          createFeatureCard(
-            item,
-            "NEW"
-          )
+          createRecentCard(item)
 
         );
 
@@ -985,7 +952,6 @@
     );
 
   }
-
 
 
   if (recentCount) {
@@ -996,53 +962,13 @@
   }
 
 
-
   /* =========================================
-     RENDER SPECIAL
-     ========================================= */
-
-  if (specialGrid) {
-
-    specialGrid.innerHTML =
-      "";
-
-
-    specialContent.forEach(
-      item => {
-
-        specialGrid.appendChild(
-
-          createFeatureCard(
-            item,
-            "EXCLUSIVE"
-          )
-
-        );
-
-      }
-    );
-
-  }
-
-
-
-  if (specialCount) {
-
-    specialCount.textContent =
-      `${specialContent.length} EXCLUSIVE`;
-
-  }
-
-
-
-  /* =========================================
-     RENDER NORMAL PHOTOS
+     RENDER PHOTO GALLERY
      ========================================= */
 
   if (photoGrid) {
 
-    photoGrid.innerHTML =
-      "";
+    photoGrid.innerHTML = "";
 
 
     regularPhotos.forEach(
@@ -1050,9 +976,7 @@
 
         photoGrid.appendChild(
 
-          createPhotoCard(
-            filename
-          )
+          createPhotoCard(filename)
 
         );
 
@@ -1060,7 +984,6 @@
     );
 
   }
-
 
 
   if (photoCount) {
@@ -1071,15 +994,13 @@
   }
 
 
-
   /* =========================================
-     RENDER NORMAL VIDEOS
+     RENDER VIDEO GALLERY
      ========================================= */
 
   if (videoGrid) {
 
-    videoGrid.innerHTML =
-      "";
+    videoGrid.innerHTML = "";
 
 
     regularVideos.forEach(
@@ -1103,14 +1024,12 @@
   }
 
 
-
   if (videoCount) {
 
     videoCount.textContent =
       `${regularVideos.length} VIDEOS`;
 
   }
-
 
 
 })();
