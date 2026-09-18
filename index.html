@@ -1,48 +1,144 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Private Gallery</title>
-  <link rel="stylesheet" href="styles.css" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  />
+
+  <meta
+    name="theme-color"
+    content="#050506"
+  />
+
+  <title>Ashley Danielle | Gallery</title>
+
+  <link
+    rel="stylesheet"
+    href="./styles.css"
+  />
 </head>
+
+
 <body>
+
+  <!-- TOP BAR -->
   <header class="topbar">
+
     <div class="wrap">
-      <h1>Private Gallery</h1>
-      <p class="sub">18+ only • Photos + Videos</p>
+
+      <h1>ASHLEY DANIELLE</h1>
+
+      <p class="sub">
+        PHOTO • VIDEO • VISUALS
+      </p>
+
     </div>
+
   </header>
 
+
+  <!-- MAIN CONTENT -->
   <main class="wrap">
+
+
+    <!-- PHOTOS -->
     <section class="section">
+
       <div class="section-title">
+
         <h2>Photos</h2>
-        <div id="photoCount" class="count"></div>
+
+        <div
+          id="photoCount"
+          class="count">
+        </div>
+
       </div>
-      <div id="photoGrid" class="grid"></div>
+
+
+      <div
+        id="photoGrid"
+        class="grid">
+      </div>
+
     </section>
 
+
+    <!-- VIDEOS -->
     <section class="section">
+
       <div class="section-title">
+
         <h2>Videos</h2>
-        <div id="videoCount" class="count"></div>
+
+        <div
+          id="videoCount"
+          class="count">
+        </div>
+
       </div>
-      <div id="videoGrid" class="grid"></div>
+
+
+      <div
+        id="videoGrid"
+        class="grid">
+      </div>
+
     </section>
+
+
   </main>
 
-  <!-- Modal -->
-  <div id="modal" class="modal" aria-hidden="true">
+
+
+  <!-- FULL SCREEN PREVIEW -->
+  <div
+    id="modal"
+    class="modal"
+    aria-hidden="true"
+  >
+
     <div class="modal-inner">
+
       <div class="modal-bar">
-        <div id="modalTitle" class="modal-title">Preview</div>
-        <button id="closeBtn" class="close">Close</button>
+
+        <div
+          id="modalTitle"
+          class="modal-title">
+          Preview
+        </div>
+
+
+        <button
+          id="closeBtn"
+          class="close"
+          type="button">
+
+          Close
+
+        </button>
+
       </div>
-      <div id="modalContent" class="modal-content"></div>
+
+
+      <div
+        id="modalContent"
+        class="modal-content">
+      </div>
+
     </div>
+
   </div>
 
-<script src="gallery.js?v=3"></script></html>
+
+
+  <!-- GALLERY JAVASCRIPT -->
+  <script src="./gallery.js?v=4"></script>
+
 </body>
+
 </html>
