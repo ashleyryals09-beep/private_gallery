@@ -2,91 +2,356 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8">
 
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1"
-  />
+  >
 
   <meta
     name="theme-color"
     content="#050506"
-  />
+  >
 
-  <title>Ashley Danielle | Gallery</title>
+  <title>Ashley Danielle | Portfolio</title>
+
+  <!-- Fonts -->
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
 
   <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap"
     rel="stylesheet"
-    href="./styles.css"
-  />
+  >
+
+  <!-- Website CSS -->
+  <link
+    rel="stylesheet"
+    href="./styles.css?v=20"
+  >
 </head>
 
 
 <body>
 
-  <!-- TOP BAR -->
-  <header class="topbar">
 
-    <div class="wrap">
+  <!-- =====================================
+       NAVIGATION
+       ===================================== -->
 
-      <h1>ASHLEY DANIELLE</h1>
+  <header class="site-nav">
 
-      <p class="sub">
-        PHOTO • VIDEO • VISUALS
-      </p>
+    <a
+      class="brand"
+      href="#top"
+    >
+      ASHLEY<span>.</span>
+    </a>
 
-    </div>
+
+    <nav>
+
+      <a href="#recent">
+        New
+      </a>
+
+      <a href="#special">
+        Special
+      </a>
+
+      <a href="#photos">
+        Photos
+      </a>
+
+      <a href="#videos">
+        Video
+      </a>
+
+      <a
+        class="nav-cta"
+        href="#contact"
+      >
+        Book Me
+      </a>
+
+    </nav>
 
   </header>
 
 
-  <!-- MAIN CONTENT -->
-  <main class="wrap">
+
+  <main id="top">
 
 
-    <!-- PHOTOS -->
-    <section class="section">
+    <!-- =====================================
+         HERO
+         ===================================== -->
 
-      <div class="section-title">
+    <section class="hero">
 
-        <h2>Photos</h2>
+      <img
+        id="heroImage"
+        class="hero-photo"
+        alt=""
+      >
+
+      <div class="hero-shade"></div>
+
+
+      <div class="hero-copy">
+
+        <p class="eyebrow">
+          MODEL • CREATOR • VISUAL STORYTELLER
+        </p>
+
+
+        <h1>
+          ASHLEY
+          <span>DANIELLE</span>
+        </h1>
+
+
+        <a
+          class="hero-btn"
+          href="#recent"
+        >
+
+          ENTER GALLERY
+
+          <span>
+            ↘
+          </span>
+
+        </a>
+
+      </div>
+
+
+      <div class="hero-side">
+        PORTFOLIO / 2026
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         RECENTLY ADDED
+         ===================================== -->
+
+    <section
+      id="recent"
+      class="portfolio-section recent-section"
+    >
+
+      <div class="section-head">
+
+        <div>
+
+          <p class="eyebrow">
+            FRESH CONTENT
+          </p>
+
+          <h2>
+            RECENTLY
+            <span>ADDED</span>
+          </h2>
+
+        </div>
+
+
+        <div
+          id="recentCount"
+          class="count"
+        ></div>
+
+      </div>
+
+
+      <div
+        id="recentGrid"
+        class="feature-grid"
+      ></div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         SPECIAL / EXCLUSIVE
+         ===================================== -->
+
+    <section
+      id="special"
+      class="portfolio-section special-section"
+    >
+
+      <div class="special-header">
+
+        <div>
+
+          <p class="eyebrow">
+            PRIVATE COLLECTION
+          </p>
+
+
+          <h2>
+            SPECIAL
+            <span>EDITION</span>
+          </h2>
+
+
+          <p class="special-sub">
+            Different. Exclusive. Unforgettable.
+          </p>
+
+        </div>
+
+
+        <div
+          id="specialCount"
+          class="count"
+        ></div>
+
+      </div>
+
+
+      <div
+        id="specialGrid"
+        class="feature-grid special-grid"
+      ></div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         MAIN PHOTO GALLERY
+         ===================================== -->
+
+    <section
+      id="photos"
+      class="portfolio-section"
+    >
+
+      <div class="section-head">
+
+        <div>
+
+          <p class="eyebrow">
+            SELECTED WORK
+          </p>
+
+          <h2>
+            PHOTO
+            <span>GALLERY</span>
+          </h2>
+
+        </div>
+
 
         <div
           id="photoCount"
-          class="count">
-        </div>
+          class="count"
+        ></div>
 
       </div>
 
 
       <div
         id="photoGrid"
-        class="grid">
-      </div>
+        class="photo-grid"
+      ></div>
 
     </section>
 
 
-    <!-- VIDEOS -->
-    <section class="section">
 
-      <div class="section-title">
+    <!-- =====================================
+         VIDEO GALLERY
+         ===================================== -->
 
-        <h2>Videos</h2>
+    <section
+      id="videos"
+      class="portfolio-section"
+    >
+
+      <div class="section-head">
+
+        <div>
+
+          <p class="eyebrow">
+            IN MOTION
+          </p>
+
+
+          <h2>
+            FEATURED
+            <span>VIDEO</span>
+          </h2>
+
+        </div>
+
 
         <div
           id="videoCount"
-          class="count">
-        </div>
+          class="count"
+        ></div>
 
       </div>
 
 
       <div
         id="videoGrid"
-        class="grid">
-      </div>
+        class="video-grid"
+      ></div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         BOOKING
+         ===================================== -->
+
+    <section
+      id="contact"
+      class="contact-section"
+    >
+
+      <p class="eyebrow">
+        BOOKINGS + COLLABORATIONS
+      </p>
+
+
+      <h2>
+        MAKE IT
+        <span>UNFORGETTABLE.</span>
+      </h2>
+
+
+      <!-- Replace YOUR-EMAIL@example.com -->
+      <a
+        class="hero-btn"
+        href="mailto:YOUR-EMAIL@example.com"
+      >
+
+        BOOK A PROJECT
+
+        <span>
+          ↗
+        </span>
+
+      </a>
 
     </section>
 
@@ -95,7 +360,28 @@
 
 
 
-  <!-- FULL SCREEN PREVIEW -->
+  <!-- =====================================
+       FOOTER
+       ===================================== -->
+
+  <footer>
+
+    <span>
+      ASHLEY DANIELLE
+    </span>
+
+    <span>
+      PHOTO • VIDEO • PORTFOLIO
+    </span>
+
+  </footer>
+
+
+
+  <!-- =====================================
+       FULLSCREEN MODAL
+       ===================================== -->
+
   <div
     id="modal"
     class="modal"
@@ -108,7 +394,8 @@
 
         <div
           id="modalTitle"
-          class="modal-title">
+          class="modal-title"
+        >
           Preview
         </div>
 
@@ -116,10 +403,9 @@
         <button
           id="closeBtn"
           class="close"
-          type="button">
-
-          Close
-
+          type="button"
+        >
+          CLOSE ×
         </button>
 
       </div>
@@ -127,8 +413,8 @@
 
       <div
         id="modalContent"
-        class="modal-content">
-      </div>
+        class="modal-content"
+      ></div>
 
     </div>
 
@@ -136,9 +422,9 @@
 
 
 
-  <!-- GALLERY JAVASCRIPT -->
-<script src="./gallery.js?v=5"></script>
-  
+  <!-- JavaScript -->
+  <script src="./gallery.js?v=20"></script>
+
 </body>
 
 </html>
