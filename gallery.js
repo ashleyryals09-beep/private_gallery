@@ -79,8 +79,8 @@
     },
 
     {
-      type: "image",
-      file: "photo316.jpeg"
+      type: "video",
+      file: "copy_EC7B19D9-F53C-478E-BD0C-8F66A7D330F4.mp4"
     },
 
     {
