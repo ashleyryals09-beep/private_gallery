@@ -1,413 +1,93 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1"
-  >
-
-  <meta
-    name="theme-color"
-    content="#050506"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#040405">
   <title>Private Gallery</title>
 
-  <!-- Fonts -->
-  <link
-    rel="preconnect"
-    href="https://fonts.googleapis.com"
-  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  >
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet"
-  >
-
-  <!-- Website CSS -->
-  <link
-    rel="stylesheet"
-    href="./styles.css?v=20"
-  >
+  <link rel="stylesheet" href="./styles.css?v=31">
+  <script src="./gallery.js?v=31" defer></script>
 </head>
-
-
 <body>
-
-
-  <!-- =====================================
-       NAVIGATION
-       ===================================== -->
-
   <header class="site-nav">
-
-    <a
-      class="brand"
-      href="#top"
-    >
-      Private<span>.</span>
-    </a>
-
-
+    <a class="brand" href="#top">PRIVATE<span>.</span></a>
     <nav>
-
-      <a href="#recent">
-        Recently Added
-      </a>
-
-      <a href="#photos">
-        Photos
-      </a>
-
-      <a href="#videos">
-        Video
-      </a>
-
-      <a
-        class="nav-cta"
-        href="#contact"
-      >
-      
-      </a>
-
+      <a href="#recent">Recently Added</a>
+      <a href="#photos">Photos</a>
+      <a href="#videos">Video</a>
     </nav>
-
   </header>
 
-
-
   <main id="top">
-
-
-    <!-- =====================================
-         HERO
-         ===================================== -->
-
     <section class="hero">
-
-      <img
-        id="heroImage"
-        class="hero-photo"
-        alt=""
-      >
-
+      <img id="heroImage" class="hero-photo" alt="">
       <div class="hero-shade"></div>
 
-
       <div class="hero-copy">
-
-        <p class="eyebrow">
-          VISUAL STORYTELLER
-        </p>
-
-
-        <h1>
-          Private
-          <span>Gallery</span>
-        </h1>
-
-
-        <a
-          class="hero-btn"
-          href="#recent"
-        >
-
-          ENTER GALLERY
-
-          <span>
-            ↘
-          </span>
-
-        </a>
-
+        <p class="eyebrow">VISUAL STORYTELLER</p>
+        <h1>PRIVATE <span>GALLERY</span></h1>
+        <a class="hero-btn" href="#recent">ENTER GALLERY <span>↘</span></a>
       </div>
 
-
-      <div class="hero-side">
-        Gallery / 2026
-      </div>
-
+      <div class="hero-side">GALLERY / 2026</div>
     </section>
 
-
-
-    <!-- =====================================
-         RECENTLY ADDED
-         ===================================== -->
-
-    <section
-      id="recent"
-      class="portfolio-section recent-section"
-    >
-
+    <section id="recent" class="portfolio-section recent-section">
       <div class="section-head">
-
         <div>
-
-          <p class="eyebrow">
-            FRESH CONTENT
-          </p>
-
-          <h2>
-            RECENTLY
-            <span>ADDED</span>
-          </h2>
-
+          <p class="eyebrow">FRESH CONTENT</p>
+          <h2>RECENTLY <span>ADDED</span></h2>
         </div>
-
-
-        <div
-          id="recentCount"
-          class="count"
-        ></div>
-
+        <div id="recentCount" class="count"></div>
       </div>
-
-
-      <div
-        id="recentGrid"
-        class="feature-grid"
-      ></div>
-
+      <div id="recentGrid" class="feature-grid"></div>
     </section>
 
-
-
-    <!-- =====================================
-         SPECIAL / EXCLUSIVE
-         ===================================== -->
-
-    <section
-      id="special"
-      class="portfolio-section special-section"
-    >
-
-      <div class="special-header">
-
-        <div>
-
-          <p class="eyebrow">
-            PRIVATE COLLECTION
-          </p>
-
-
-          <h2>
-            SPECIAL
-            <span>EDITION</span>
-          </h2>
-
-
-          <p class="special-sub">
-            Different. Exclusive. Unforgettable.
-          </p>
-
-        </div>
-
-
-        <div
-          id="specialCount"
-          class="count"
-        ></div>
-
-      </div>
-
-
-      <div
-        id="specialGrid"
-        class="feature-grid special-grid"
-      ></div>
-
-    </section>
-
-
-
-    <!-- =====================================
-         MAIN PHOTO GALLERY
-         ===================================== -->
-
-    <section
-      id="photos"
-      class="portfolio-section"
-    >
-
+    <section id="photos" class="portfolio-section">
       <div class="section-head">
-
         <div>
-
-          <p class="eyebrow">
-           
-          </p>
-
-          <h2>
-            PHOTO
-            <span>GALLERY</span>
-          </h2>
-
+          <p class="eyebrow">SELECTED WORK</p>
+          <h2>PHOTO <span>GALLERY</span></h2>
         </div>
-
-
-        <div
-          id="photoCount"
-          class="count"
-        ></div>
-
+        <div id="photoCount" class="count"></div>
       </div>
-
-
-      <div
-        id="photoGrid"
-        class="photo-grid"
-      ></div>
-
+      <div id="photoGrid" class="photo-grid"></div>
     </section>
 
-
-
-    <!-- =====================================
-         VIDEO GALLERY
-         ===================================== -->
-
-    <section
-      id="videos"
-      class="portfolio-section"
-    >
-
+    <section id="videos" class="portfolio-section">
       <div class="section-head">
-
         <div>
-
-          <p class="eyebrow">
-            IN MOTION
-          </p>
-
-
-          <h2>
-            FEATURED
-            <span>VIDEO</span>
-          </h2>
-
+          <p class="eyebrow">IN MOTION</p>
+          <h2>FEATURED <span>VIDEO</span></h2>
         </div>
-
-
-        <div
-          id="videoCount"
-          class="count"
-        ></div>
-
+        <div id="videoCount" class="count"></div>
       </div>
-
-
-      <div
-        id="videoGrid"
-        class="video-grid"
-      ></div>
-
+      <div id="videoGrid" class="video-grid"></div>
     </section>
-
-
-
-    <!-- =====================================
-         BOOKING
-         ===================================== -->
-
-   
-      <h2>
-        <span>UNFORGETTABLE.</span>
-      </h2>
-
-
-      <!-- Replace YOUR-EMAIL@example.com -->
-      <a
-        class="hero-btn"
-        href="mailto:YOUR-EMAIL@example.com"
-      >
-        <span>
-          ↗
-        </span>
-
-      </a>
-
-    </section>
-
-
   </main>
 
-
-
-  <!-- =====================================
-       FOOTER
-       ===================================== -->
-
   <footer>
-
-    <span>
-    Private Gallery
-    </span>
-
-    <span>
-      PHOTO • VIDEO • 
-    </span>
-
+    <span>PRIVATE GALLERY</span>
+    <span>PHOTO • VIDEO</span>
   </footer>
 
-
-
-  <!-- =====================================
-       FULLSCREEN MODAL
-       ===================================== -->
-
-  <div
-    id="modal"
-    class="modal"
-    aria-hidden="true"
-  >
-
+  <div id="modal" class="modal" aria-hidden="true">
     <div class="modal-inner">
-
       <div class="modal-bar">
-
-        <div
-          id="modalTitle"
-          class="modal-title"
-        >
-          Preview
-        </div>
-
-
-        <button
-          id="closeBtn"
-          class="close"
-          type="button"
-        >
-          CLOSE ×
-        </button>
-
+        <div id="modalTitle" class="modal-title">Preview</div>
+        <button id="closeBtn" class="close" type="button">CLOSE ×</button>
       </div>
-
-
-      <div
-        id="modalContent"
-        class="modal-content"
-      ></div>
-
+      <div id="modalContent" class="modal-content"></div>
     </div>
-
   </div>
 
-
-
-  <!-- JavaScript -->
-  <script src="./gallery.js?v=20"></script>
-
+  <noscript>
+    <div class="js-warning">This gallery requires JavaScript to display the media.</div>
+  </noscript>
 </body>
-
 </html>
