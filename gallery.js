@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
      No photos.json or videos.json required.
      ===================================================== */
 
-  const HERO_PHOTO = "photo1.jpeg";
+  const HERO_PHOTO = "IMG_1040.jpg";
 
   const allPhotos = [
     ...Array.from({ length: 27 }, (_, i) => `photo${i + 1}.jpeg`),
