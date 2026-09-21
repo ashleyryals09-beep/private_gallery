@@ -46,14 +46,11 @@ document.addEventListener("DOMContentLoaded", () => {
     "video21.mp4",
     "video22.mp4",
     "video23.mp4",
-    "0918 (1).mp4",
-    "copy_EC7B19D9-F53C-478E-BD0C-8F66A7D330F4.mp4"
+   
   ];
 
   /* Change only this list when you want to change Recently Added. */
   const recentlyAdded = [
-    { type: "video", file: "0918 (1).mp4" },
-    { type: "video", file: "copy_EC7B19D9-F53C-478E-BD0C-8F66A7D330F4.mp4" },
     { type: "image", file: "photo4444.jpg" },
     { type: "image", file: "photo333333.jpeg" },
     { type: "video", file: "video23.mp4" },
